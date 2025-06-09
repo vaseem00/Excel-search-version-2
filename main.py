@@ -10,7 +10,7 @@ ALL_COLUMNS = [
     'Class', 'Opportunity', 'PO Number', 'Manufacturer Part Number', 'Manufacturer Number',
     'Manufacturer', 'Supplier', 'Product', 'Part No', 'Origin', 'Mail id', 'Description'
 ]
-EXCEL_FILE_PATH = r"C:\Users\User\Desktop\Procurement automation project\old_erp_plus_outlook_full.xlsx"
+EXCEL_FILE_PATH = "old_erp_plus_outlook_full.xlsx"
 
 # --- Config ---
 st.set_page_config(page_title="ERP Search & Analysis Tool", layout="wide")
