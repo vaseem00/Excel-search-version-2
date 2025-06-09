@@ -10,7 +10,7 @@ ALL_COLUMNS = [
     'Class', 'Opportunity', 'PO Number', 'Manufacturer Part Number', 'Manufacturer Number',
     'Manufacturer', 'Supplier', 'Product', 'Part No', 'Origin', 'Mail id', 'Description'
 ]
-EXCEL_FILE_PATH = "old_erp_plus_outlook_full.xlsx"
+EXCEL_FILE_PATH = r"C:\Users\User\Desktop\Procurement automation project\old_erp_plus_outlook_full.xlsx"
 
 # --- Config ---
 st.set_page_config(page_title="ERP Search & Analysis Tool", layout="wide")
@@ -58,22 +58,17 @@ def nested_frequency_sort(df_slice, columns):
         freq_cols.append(freq_col)
     return df_copy.sort_values(by=freq_cols, ascending=[False]*len(freq_cols)).drop(columns=freq_cols)
 
-# --- Search Interface ---
+# --- Search Section ---
 st.subheader("🔍 Search Options")
 search_col = st.selectbox("Choose column to search in:", SEARCH_COLUMNS)
 search_term = st.text_input(f"Enter search term for '{search_col}'")
 
-# --- State Reset ---
-if "filter_reset" not in st.session_state:
-    st.session_state["filter_reset"] = False
-
+# --- Reset Filters Logic ---
 if st.button("🔄 Reset All Filters"):
-    for col in ALL_COLUMNS:
-        st.session_state[f"filter_dropdown_{col}"] = []
-    st.session_state["filter_reset"] = True
+    st.experimental_set_query_params()  # clears all widget values
     st.experimental_rerun()
 
-# --- Filter Data ---
+# --- Filtering Logic ---
 if search_term:
     filtered_df = filter_rows(df, search_col, search_term)
     st.markdown(f"✅ **{len(filtered_df)}** matching rows found.")
@@ -86,12 +81,10 @@ if search_term:
             selected_vals = st.multiselect(
                 f"Choose values for '{col}'",
                 options=sorted(unique_vals),
-                default=st.session_state.get(f"filter_dropdown_{col}", []),
                 key=f"filter_dropdown_{col}"
             )
             if selected_vals:
                 filtered_df = filtered_df[filtered_df[col].astype(str).isin(selected_vals)]
-                st.session_state[f"filter_dropdown_{col}"] = selected_vals
 
     # --- Sorting ---
     with st.expander("↕️ Sorting"):
